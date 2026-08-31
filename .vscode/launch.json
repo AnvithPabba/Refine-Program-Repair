@@ -1,0 +1,33 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: Current File with Arguments",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/app/main.py",
+            "console": "integratedTerminal",
+            "args": [
+                "swe-bench",
+                "--model", 
+                "claude-3-haiku-20240307", 
+                "--setup-map", 
+                "../SWE-bench/setup_result/setup_map.json", 
+                "--tasks-map", 
+                "../SWE-bench/setup_result/tasks_map.json", 
+                "--output-dir", 
+                "output", 
+                "--task-list-file", 
+                "/opt/SWE-bench/tasks.txt", 
+                "--model-temperature", 
+                "1.0",
+                "--enable-validation",
+                "--enable-perfect-angelic"
+
+            ],
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        }
+    ]
+}
