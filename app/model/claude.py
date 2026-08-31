@@ -21,7 +21,7 @@ from app.model import common
 from app.model.common import ClaudeContentPolicyViolation, Model
 import tiktoken
 
-import config
+from app import config
 import json
 
 class AnthropicModel(Model):

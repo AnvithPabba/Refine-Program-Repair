@@ -17,11 +17,8 @@ from app.log import log_and_print
 from app.model import common
 from app.model.common import Model
 
-from google import genai
-from google.genai.types import HttpOptions
 import warnings
 
-from google.genai import types
 from vertexai.generative_models import GenerativeModel, GenerationConfig, Content, Part
 from vertexai.generative_models import (
     GenerativeModel,
@@ -186,12 +183,11 @@ class GeminiModelGeneric(Model):
         super().__init__(name, cost_per_input, cost_per_output, parallel_tool_call)
         self._initialized = True
         self.name = name
-        self.client = GenerativeModel(self.name)
+        self.client: GenerativeModel | None = None
         self.seed = None
         self.locations = locations
-        self.vertexai_init_location('us-central1')
 
-        warnings.filterwarnings("ignore", 
+        warnings.filterwarnings("ignore",
                         "Your application has authenticated using end user credentials",
                         UserWarning)
 
@@ -201,6 +197,8 @@ class GeminiModelGeneric(Model):
         Check if setup is dine.
         """
         self.check_api_key()
+        self.vertexai_init_location(self.locations[0])
+        self.client = GenerativeModel(self.name)
 
     def check_api_key(self) -> str:
         project_name = "GOOGLE_CLOUD_PROJECT"
@@ -289,7 +287,8 @@ class GeminiModelGeneric(Model):
         temperature=common.MODEL_TEMP,
         **kwargs,
     ):
-        
+        assert self.client is not None, "Call setup() before using a Vertex AI model"
+
         #prefill_content = "IMPORTANT: Your response must be a **complete, valid JSON object** starting with '{' and ending with '}'. that can be parsed with `json.loads(output)"
 
         return_only_one_output = True if num_candidates==1 else False
